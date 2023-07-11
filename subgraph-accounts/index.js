@@ -19,8 +19,8 @@ async function startApolloServer() {
     }),
   });
 
-  const port = 0; // TODO: change port number
-  const subgraphName = ''; // TODO: change to subgraph name
+  const port = 4002; // TODO: change port number
+  const subgraphName = 'accounts'; // TODO: change to subgraph name
 
   try {
     const { url } = await startStandaloneServer(server, {
