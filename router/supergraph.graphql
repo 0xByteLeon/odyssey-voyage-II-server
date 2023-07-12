@@ -311,31 +311,33 @@ enum LocationType
 }
 
 type Mutation
+  @join__type(graph: ACCOUNTS)
   @join__type(graph: MONOLITH)
 {
   """Updates the logged-in user's profile information"""
-  updateProfile(updateProfileInput: UpdateProfileInput): UpdateProfileResponse!
+  updateProfile(updateProfileInput: UpdateProfileInput!): UpdateProfileResponse! @join__field(graph: ACCOUNTS)
 
   """Creates a new listing for the currently authenticated host"""
-  createListing(listing: CreateListingInput!): CreateListingResponse!
+  createListing(listing: CreateListingInput!): CreateListingResponse! @join__field(graph: MONOLITH)
 
   """Updates an existing listing"""
-  updateListing(listingId: ID!, listing: UpdateListingInput!): UpdateListingResponse!
-  createBooking(createBookingInput: CreateBookingInput): CreateBookingResponse!
+  updateListing(listingId: ID!, listing: UpdateListingInput!): UpdateListingResponse! @join__field(graph: MONOLITH)
+  createBooking(createBookingInput: CreateBookingInput): CreateBookingResponse! @join__field(graph: MONOLITH)
 
   """
   Creates reviews for both host and listing for a particular booking - must be authored by guest of past booking
   """
-  submitHostAndLocationReviews(bookingId: ID!, hostReview: ReviewInput!, locationReview: ReviewInput!): SubmitHostAndLocationReviewsResponse!
+  submitHostAndLocationReviews(bookingId: ID!, hostReview: ReviewInput!, locationReview: ReviewInput!): SubmitHostAndLocationReviewsResponse! @join__field(graph: MONOLITH)
 
   """
   Creates a review for the guest - must be authored by host of past booking
   """
-  submitGuestReview(bookingId: ID!, guestReview: ReviewInput!): SubmitGuestReviewResponse!
-  addFundsToWallet(amount: Float!): AddFundsToWalletResponse!
+  submitGuestReview(bookingId: ID!, guestReview: ReviewInput!): SubmitGuestReviewResponse! @join__field(graph: MONOLITH)
+  addFundsToWallet(amount: Float!): AddFundsToWalletResponse! @join__field(graph: MONOLITH)
 }
 
 interface MutationResponse
+  @join__type(graph: ACCOUNTS)
   @join__type(graph: MONOLITH)
 {
   """Similar to HTTP status code, represents the status of the mutation"""
@@ -361,11 +363,10 @@ type Query
   @join__type(graph: ACCOUNTS)
   @join__type(graph: MONOLITH)
 {
-  example: String @join__field(graph: ACCOUNTS)
-  user(id: ID!): User @join__field(graph: MONOLITH)
+  user(id: ID!): User @join__field(graph: ACCOUNTS)
 
   """Currently logged-in user"""
-  me: User! @join__field(graph: MONOLITH)
+  me: User! @join__field(graph: ACCOUNTS)
 
   """A curated array of listings to feature on the homepage"""
   featuredListings: [Listing!]! @join__field(graph: MONOLITH)
@@ -558,7 +559,7 @@ type UpdateListingResponse implements MutationResponse
 
 """Fields that can be updated"""
 input UpdateProfileInput
-  @join__type(graph: MONOLITH)
+  @join__type(graph: ACCOUNTS)
 {
   """The user's first and last name"""
   name: String
@@ -572,8 +573,8 @@ input UpdateProfileInput
 
 """The response after updating a profile"""
 type UpdateProfileResponse implements MutationResponse
-  @join__implements(graph: MONOLITH, interface: "MutationResponse")
-  @join__type(graph: MONOLITH)
+  @join__implements(graph: ACCOUNTS, interface: "MutationResponse")
+  @join__type(graph: ACCOUNTS)
 {
   """Similar to HTTP status code, represents the status of the mutation"""
   code: Int!

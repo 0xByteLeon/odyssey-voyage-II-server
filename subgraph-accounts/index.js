@@ -2,6 +2,8 @@ const { ApolloServer } = require('@apollo/server');
 const { startStandaloneServer } = require('@apollo/server/standalone');
 const { buildSubgraphSchema } = require('@apollo/subgraph');
 
+const AccountsAPI = require('./datasources/accounts');
+
 const { readFileSync } = require('fs');
 const axios = require('axios');
 const gql = require('graphql-tag');
@@ -25,6 +27,7 @@ async function startApolloServer() {
   try {
     const { url } = await startStandaloneServer(server, {
       context: async ({ req }) => {
+        console.log('start build query context')
         const token = req.headers.authorization || '';
         const userId = token.split(' ')[1]; // get the user name after 'Bearer '
 
@@ -44,7 +47,7 @@ async function startApolloServer() {
         return {
           ...userInfo,
           dataSources: {
-            // TODO: add data sources here
+            accountsAPI: new AccountsAPI({ cache }),
           },
         };
       },
