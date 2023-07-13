@@ -4,18 +4,6 @@ let i = 0
 
 const resolvers = {
     Query: {
-        // user: async (_, {id}, {dataSources}) => {
-        //     const user = await dataSources.accountsAPI.getUser(id);
-        //     if (!user) {
-        //         throw new Error('No user found for this Id');
-        //     }
-        //     return user;
-        // },
-        // me: async (_, __, {dataSources, userId}) => {
-        //     if (!userId) throw AuthenticationError();
-        //     const user = await dataSources.accountsAPI.getUser(userId);
-        //     return user;
-        // },
         searchListings: async (_, {criteria}, {dataSources}) => {
             const {numOfBeds, checkInDate, checkOutDate, page, limit, sortBy} = criteria;
             const listings = await dataSources.listingsAPI.getListings({numOfBeds, page, limit, sortBy});
@@ -283,11 +271,6 @@ const resolvers = {
             }
         },
     },
-    // User: {
-    //     __resolveType(user) {
-    //         return user.role;
-    //     },
-    // },
     Host: {
         overallRating: ({id}, _, {dataSources}) => {
             return dataSources.reviewsDb.getOverallRatingForHost(id);
@@ -302,7 +285,6 @@ const resolvers = {
     Listing: {
         host: ({hostId}, _, {dataSources}) => {
             return {id: hostId}
-            // return dataSources.accountsAPI.getUser(hostId);
         },
         overallRating: ({id}, _, {dataSources}) => {
             return dataSources.reviewsDb.getOverallRatingForListing(id);
@@ -337,7 +319,6 @@ const resolvers = {
         },
         guest: ({guestId}, _, {dataSources}) => {
             return {id: guestId}
-            // return dataSources.accountsAPI.getUser(guestId);
         },
         totalPrice: async ({listingId, checkInDate, checkOutDate}, _, {dataSources}) => {
             const {totalCost} = await dataSources.listingsAPI.getTotalCost({id: listingId, checkInDate, checkOutDate});
@@ -362,7 +343,6 @@ const resolvers = {
                 role = 'Host';
             }
             return {__typename: role, id: review.authorId};
-            // return dataSources.accountsAPI.getUser(authorId);
         },
     },
     AmenityCategory: {
